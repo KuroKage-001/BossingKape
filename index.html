@@ -93,6 +93,42 @@
       bottom: 80px;
       right: 20px;
     }
+    
+    #checkoutModal {
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    #checkoutModal .modal-content {
+      max-height: 90vh;
+      overflow-y: auto;
+      margin: auto;
+      position: relative;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e0 #f7fafc;
+    }
+    
+    #checkoutModal .modal-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #checkoutModal .modal-content::-webkit-scrollbar-track {
+      background: #f7fafc;
+      border-radius: 3px;
+    }
+    
+    #checkoutModal .modal-content::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 3px;
+    }
+    
+    #checkoutModal .modal-content::-webkit-scrollbar-thumb:hover {
+      background: #a0aec0;
+    }
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -138,15 +174,92 @@
     .input-error {
       border-color: #ef4444 !important;
       animation: shake 0.3s ease;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
     .input-valid {
       border-color: #10b981 !important;
       transition: border-color 0.3s ease;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
       75% { transform: translateX(5px); }
+    }
+    
+    .form-field {
+      transition: all 0.3s ease;
+    }
+    
+    .form-field:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 4px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Image modal specific styles */
+    #imageModal .modal-content {
+      background: transparent;
+      box-shadow: none;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+    
+    #imageModal.show .modal-content {
+      transform: scale(1);
+    }
+    
+    #fullImage {
+      transition: transform 0.3s ease;
+    }
+    
+    #fullImage:hover {
+      transform: scale(1.02);
+    }
+    
+    /* Product image hover effect */
+    .product-card img {
+      transition: all 0.3s ease;
+    }
+    
+    .product-card:hover img {
+      transform: scale(1.05);
+    }
+    
+    /* Cart badge animation */
+    #cartBadge {
+      animation: bounce 0.6s ease-in-out;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-3px); }
+      60% { transform: translateY(-2px); }
+    }
+    
+    /* Checkout form improvements */
+    .checkout-section {
+      transition: all 0.3s ease;
+    }
+    
+    .checkout-section:focus-within {
+      transform: translateY(-2px);
     }
     #ratingStars span:hover {
       color: #FFD700;
@@ -161,6 +274,19 @@
       #cartModal .modal-content, #customizeModal .modal-content {
         bottom: 60px;
         right: 10px;
+      }
+      #imageModal .modal-content {
+        width: 98%;
+        max-width: none;
+      }
+      #imageModal .modal-content img {
+        max-height: 80vh;
+      }
+      #checkoutModal .modal-content {
+        width: 98%;
+        max-width: none;
+        max-height: 85vh;
+        margin: 10px;
       }
       .hero-image {
         height: 50vh;
@@ -187,11 +313,17 @@
       <img src="https://cdn-icons-png.flaticon.com/512/3047/3047927.png" alt="Logo" class="w-10 h-10 object-cover" />
       <span class="text-xl font-semibold text-black">BossingKape</span>
     </div>
-    <nav class="hidden md:flex space-x-6 text-sm font-medium">
+    <nav class="hidden md:flex space-x-6 text-sm font-medium items-center">
       <a href="#about" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('about')">About</a>
       <a href="#products" class="text-black hover:text-gray-700 hover:underline transition">Menu</a>
       <a href="#visit" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('visit')">Visit Us</a>
       <a href="#contact" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('contact')">Contact Us</a>
+      <button id="headerCartBtn" class="relative text-black hover:text-gray-700 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        <span id="cartBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+      </button>
     </nav>
     <div class="md:hidden">
       <button id="hamburger" class="flex flex-col justify-between w-6 h-4 cursor-pointer">
@@ -252,7 +384,7 @@
         type="text"
         id="searchInput"
         placeholder="Search for coffee..."
-        class="w-full max-w-md px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+        class="w-full max-w-md px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
       />
     </div>
     <div id="productContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
@@ -280,7 +412,7 @@
             type="text"
             id="reservationName"
             placeholder="Your Name"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="reservationNameError"
           />
           <p id="reservationNameError" class="error-message">Name is required.</p>
@@ -290,18 +422,18 @@
           <input
             type="tel"
             id="reservationPhone"
-            placeholder="Your Phone Number"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            placeholder="09123456789"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="reservationPhoneError"
           />
-          <p id="reservationPhoneError" class="error-message">Valid phone number is required (10-15 digits).</p>
+          <p id="reservationPhoneError" class="error-message">Valid Philippine phone number is required (e.g., 09123456789).</p>
         </div>
         <div>
           <label for="reservationDateTime" class="block text-sm font-medium text-gray-700">Date and Time</label>
           <input
             type="datetime-local"
             id="reservationDateTime"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="reservationDateTimeError"
           />
           <p id="reservationDateTimeError" class="error-message">Future date and time are required.</p>
@@ -314,7 +446,7 @@
             placeholder="Number of Guests"
             min="1"
             max="10"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="reservationGuestsError"
           />
           <p id="reservationGuestsError" class="error-message">Number of guests (1-10) is required.</p>
@@ -325,7 +457,7 @@
             id="reservationRequests"
             placeholder="Special Requests"
             rows="3"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
           ></textarea>
         </div>
         <button
@@ -350,7 +482,7 @@
             type="text"
             id="contactName"
             placeholder="Your Name"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="contactNameError"
           />
           <p id="contactNameError" class="error-message">Name is required.</p>
@@ -361,7 +493,7 @@
             type="email"
             id="contactEmail"
             placeholder="Your Email"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="contactEmailError"
           />
           <p id="contactEmailError" class="error-message">Valid email is required.</p>
@@ -372,7 +504,7 @@
             id="contactMessage"
             placeholder="Your Message"
             rows="4"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="contactMessageError"
           ></textarea>
           <p id="contactMessageError" class="error-message">Message is required.</p>
@@ -406,7 +538,7 @@
             type="text"
             id="feedbackName"
             placeholder="Your Name"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
           />
         </div>
         <div>
@@ -415,7 +547,7 @@
             type="email"
             id="feedbackEmail"
             placeholder="Your Email"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="feedbackEmailError"
           />
           <p id="feedbackEmailError" class="error-message">Valid email is required if provided.</p>
@@ -426,7 +558,7 @@
             id="feedbackMessage"
             placeholder="Your Feedback"
             rows="4"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="feedbackMessageError"
           ></textarea>
           <p id="feedbackMessageError" class="error-message">Feedback is required.</p>
@@ -453,7 +585,7 @@
             type="email"
             id="newsletterEmail"
             placeholder="Your Email"
-            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
             aria-describedby="newsletterEmailError"
           />
           <p id="newsletterEmailError" class="error-message">Valid email is required.</p>
@@ -495,7 +627,10 @@
       <h2 class="text-2xl font-semibold mb-4">Your Cart</h2>
       <div id="cartItems" class="mb-4"></div>
       <p id="cartTotal" class="text-lg font-semibold mb-4"></p>
-      <button id="cartClose" class="modal-close">Close</button>
+      <div class="flex space-x-3">
+        <button id="cartClose" class="modal-close flex-1">Continue Shopping</button>
+        <button id="checkoutBtn" class="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition flex-1">Buy Now</button>
+      </div>
     </div>
   </div>
 
@@ -567,6 +702,164 @@
       <h2 class="text-2xl font-semibold mb-4">Subscribed!</h2>
       <p class="text-gray-700 mb-4">You're now part of the BossingKape Coffee Club. Expect exciting updates soon!</p>
       <button id="newsletterModalClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Order Confirmation Modal -->
+  <div id="orderConfirmationModal" class="modal" aria-label="Order Confirmation Modal">
+    <div class="modal-content max-w-md text-center">
+      <div class="mb-4">
+        <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h2 class="text-2xl font-semibold mb-2">Order Confirmed!</h2>
+        <p class="text-gray-700 mb-4">Thank you for your order. We'll start preparing your coffee right away!</p>
+      </div>
+      
+      <div class="bg-gray-50 p-4 rounded-lg mb-4 text-left">
+        <h3 class="font-semibold mb-2">Order Details:</h3>
+        <p class="text-sm text-gray-600 mb-1">Order ID: <span id="orderId" class="font-mono"></span></p>
+        <p class="text-sm text-gray-600 mb-1">Total: <span id="orderTotal"></span></p>
+        <p class="text-sm text-gray-600">Estimated Delivery: <span id="deliveryTime"></span></p>
+      </div>
+      
+      <p class="text-sm text-gray-600 mb-4">You'll receive a confirmation email shortly with tracking details.</p>
+      
+      <button id="orderConfirmationClose" class="modal-close w-full">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="modal" aria-label="Checkout Modal">
+    <div class="modal-content max-w-4xl w-95% max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold">Complete Your Order</h2>
+        <button id="checkoutCloseBtn" class="text-gray-500 hover:text-gray-700 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Order Summary -->
+      <div class="bg-gray-50 p-3 rounded-lg mb-4">
+        <h3 class="text-lg font-semibold mb-2">Order Summary</h3>
+        <div id="checkoutItems" class="space-y-1 mb-2 text-sm"></div>
+        <div class="border-t pt-2">
+          <div class="flex justify-between font-semibold">
+            <span>Total:</span>
+            <span id="checkoutTotal"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Information -->
+      <div class="space-y-3 mb-4">
+        <h3 class="text-lg font-semibold">Customer Information</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label for="checkoutName" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              id="checkoutName"
+              placeholder="Your Full Name"
+              class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
+              aria-describedby="checkoutNameError"
+            />
+            <p id="checkoutNameError" class="error-message">Full name is required.</p>
+          </div>
+          
+          <div>
+            <label for="checkoutPhone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              type="tel"
+              id="checkoutPhone"
+              placeholder="09123456789"
+              class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
+              aria-describedby="checkoutPhoneError"
+            />
+            <p id="checkoutPhoneError" class="error-message">Valid Philippine phone number is required.</p>
+          </div>
+        </div>
+
+        <div>
+          <label for="checkoutEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <input
+            type="email"
+            id="checkoutEmail"
+            placeholder="your.email@example.com"
+            class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
+            aria-describedby="checkoutEmailError"
+          />
+          <p id="checkoutEmailError" class="error-message">Valid email is required.</p>
+        </div>
+
+        <div>
+          <label for="checkoutAddress" class="block text-sm font-medium text-gray-700">Delivery Address</label>
+          <textarea
+            id="checkoutAddress"
+            placeholder="Complete delivery address"
+            rows="2"
+            class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
+            aria-describedby="checkoutAddressError"
+          ></textarea>
+          <p id="checkoutAddressError" class="error-message">Delivery address is required.</p>
+        </div>
+
+        <div>
+          <label for="checkoutNotes" class="block text-sm font-medium text-gray-700">Order Notes (Optional)</label>
+          <textarea
+            id="checkoutNotes"
+            placeholder="Special instructions or notes"
+            rows="2"
+            class="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black form-field"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold mb-2">Payment Method</h3>
+        <div class="space-y-2">
+          <label class="flex items-center">
+            <input type="radio" name="paymentMethod" value="cod" checked class="mr-2">
+            <span>Cash on Delivery (COD)</span>
+          </label>
+          <label class="flex items-center">
+            <input type="radio" name="paymentMethod" value="gcash" class="mr-2">
+            <span>GCash</span>
+          </label>
+          <label class="flex items-center">
+            <input type="radio" name="paymentMethod" value="card" class="mr-2">
+            <span>Credit/Debit Card</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex space-x-3">
+        <button id="checkoutCancel" class="modal-close flex-1">Cancel</button>
+        <button id="placeOrderBtn" class="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition flex-1">Place Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Full View Modal -->
+  <div id="imageModal" class="modal" aria-label="Image Full View Modal">
+    <div class="modal-content max-w-4xl w-95% p-0 bg-transparent shadow-none">
+      <div class="relative">
+        <img id="fullImage" src="" alt="Full size product image" class="w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-2xl">
+        <button id="imageModalClose" class="absolute top-4 right-4 bg-black bg-opacity-50 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div id="imageInfo" class="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg">
+          <h3 id="imageTitle" class="text-lg font-semibold"></h3>
+          <p id="imagePrice" class="text-sm opacity-90"></p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -670,7 +963,7 @@
     // Validation Functions
     function validateField(input, errorId, validationFn, errorMessage) {
       const errorElement = document.getElementById(errorId);
-      const isValid = validationFn(input);
+      const isValid = validationFn(input.value);
       if (!isValid) {
         input.classList.add('input-error');
         input.classList.remove('input-valid');
@@ -687,8 +980,54 @@
       return isValid;
     }
 
-    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
-    const phoneRegex = /^\+?\d{10,15}$/;
+    // Enhanced validation functions
+    function validateEmail(email) {
+      if (!email || typeof email !== 'string') return false;
+      return emailRegex.test(email.trim());
+    }
+
+    function validatePhone(phone) {
+      if (!phone || typeof phone !== 'string') return false;
+      return phoneRegex.test(phone.trim());
+    }
+
+    function validateDate(dateString) {
+      if (!dateString) return false;
+      const selectedDate = new Date(dateString);
+      const now = new Date();
+      // Add 1 hour buffer to allow for current time
+      now.setHours(now.getHours() + 1);
+      return selectedDate > now && !isNaN(selectedDate.getTime());
+    }
+
+    function validateRequired(value) {
+      if (!value || typeof value !== 'string') return false;
+      return value.trim().length > 0;
+    }
+
+    function validateNumberRange(value, min, max) {
+      if (!value) return false;
+      const num = parseInt(value);
+      return !isNaN(num) && num >= min && num <= max;
+    }
+
+    // Form validation state tracking
+    const formValidationState = {
+      contact: { isValid: false, fields: {} },
+      newsletter: { isValid: false, fields: {} },
+      feedback: { isValid: false, fields: {} },
+      reservation: { isValid: false, fields: {} }
+    };
+
+    // Update form validation state
+    function updateFormValidationState(formType, fieldName, isValid) {
+      if (!formValidationState[formType]) return;
+      formValidationState[formType].fields[fieldName] = isValid;
+      formValidationState[formType].isValid = Object.values(formValidationState[formType].fields).every(Boolean);
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^(\+63|0)?[9]\d{9}$/;
 
     // Contact Form Validation
     function setupContactForm() {
@@ -699,14 +1038,21 @@
       const contactModal = document.getElementById('contactModal');
       const modalClose = document.getElementById('modalClose');
 
-      contactName.addEventListener('input', () => validateField(contactName, 'contactNameError', val => val.trim().length > 0, 'Name is required.'));
-      contactEmail.addEventListener('input', () => validateField(contactEmail, 'contactEmailError', val => emailRegex.test(val), 'Valid email is required.'));
-      contactMessage.addEventListener('input', () => validateField(contactMessage, 'contactMessageError', val => val.trim().length > 0, 'Message is required.'));
+      // Real-time validation
+      contactName.addEventListener('input', () => validateField(contactName, 'contactNameError', validateRequired, 'Name is required.'));
+      contactName.addEventListener('blur', () => validateField(contactName, 'contactNameError', validateRequired, 'Name is required.'));
+      
+      contactEmail.addEventListener('input', () => validateField(contactEmail, 'contactEmailError', validateEmail, 'Valid email is required.'));
+      contactEmail.addEventListener('blur', () => validateField(contactEmail, 'contactEmailError', validateEmail, 'Valid email is required.'));
+      
+      contactMessage.addEventListener('input', () => validateField(contactMessage, 'contactMessageError', validateRequired, 'Message is required.'));
+      contactMessage.addEventListener('blur', () => validateField(contactMessage, 'contactMessageError', validateRequired, 'Message is required.'));
 
       contactSubmit.addEventListener('click', () => {
-        const isNameValid = validateField(contactName, 'contactNameError', val => val.trim().length > 0, 'Name is required.');
-        const isEmailValid = validateField(contactEmail, 'contactEmailError', val => emailRegex.test(val), 'Valid email is required.');
-        const isMessageValid = validateField(contactMessage, 'contactMessageError', val => val.trim().length > 0, 'Message is required.');
+        const isNameValid = validateField(contactName, 'contactNameError', validateRequired, 'Name is required.');
+        const isEmailValid = validateField(contactEmail, 'contactEmailError', validateEmail, 'Valid email is required.');
+        const isMessageValid = validateField(contactMessage, 'contactMessageError', validateRequired, 'Message is required.');
+        
         if (isNameValid && isEmailValid && isMessageValid) {
           console.log('Contact Form Submission:', { name: contactName.value, email: contactEmail.value, message: contactMessage.value });
           showModal('contactModal');
@@ -734,12 +1080,16 @@
       const newsletterModal = document.getElementById('newsletterModal');
       const newsletterModalClose = document.getElementById('newsletterModalClose');
 
-      newsletterEmail.addEventListener('input', () => validateField(newsletterEmail, 'newsletterEmailError', val => emailRegex.test(val), 'Valid email is required.'));
+      // Real-time validation
+      newsletterEmail.addEventListener('input', () => validateField(newsletterEmail, 'newsletterEmailError', validateEmail, 'Valid email is required.'));
+      newsletterEmail.addEventListener('blur', () => validateField(newsletterEmail, 'newsletterEmailError', validateEmail, 'Valid email is required.'));
+      
       newsletterConsent.addEventListener('change', () => validateField(newsletterConsent, 'newsletterConsentError', val => val, 'Consent is required.'));
 
       newsletterSubmit.addEventListener('click', () => {
-        const isEmailValid = validateField(newsletterEmail, 'newsletterEmailError', val => emailRegex.test(val), 'Valid email is required.');
+        const isEmailValid = validateField(newsletterEmail, 'newsletterEmailError', validateEmail, 'Valid email is required.');
         const isConsentValid = validateField(newsletterConsent, 'newsletterConsentError', val => val, 'Consent is required.');
+        
         if (isEmailValid && isConsentValid) {
           console.log('Newsletter Subscription:', { email: newsletterEmail.value });
           showModal('newsletterModal');
@@ -767,6 +1117,7 @@
       const feedbackModal = document.getElementById('feedbackModal');
       const feedbackModalClose = document.getElementById('feedbackModalClose');
 
+      // Rating validation with better visual feedback
       document.querySelectorAll('#ratingStars span').forEach(star => {
         star.addEventListener('click', () => {
           rating = parseInt(star.dataset.value);
@@ -778,14 +1129,25 @@
         });
       });
 
-      feedbackEmail.addEventListener('input', () => validateField(feedbackEmail, 'feedbackEmailError', val => !val || emailRegex.test(val), 'Valid email is required if provided.'));
-      feedbackMessage.addEventListener('input', () => validateField(feedbackMessage, 'feedbackMessageError', val => val.trim().length > 0, 'Feedback is required.'));
+      // Real-time validation
+      feedbackEmail.addEventListener('input', () => validateField(feedbackEmail, 'feedbackEmailError', val => !val || validateEmail(val), 'Valid email is required if provided.'));
+      feedbackEmail.addEventListener('blur', () => validateField(feedbackEmail, 'feedbackEmailError', val => !val || validateEmail(val), 'Valid email is required if provided.'));
+      
+      feedbackMessage.addEventListener('input', () => validateField(feedbackMessage, 'feedbackMessageError', validateRequired, 'Feedback is required.'));
+      feedbackMessage.addEventListener('blur', () => validateField(feedbackMessage, 'feedbackMessageError', validateRequired, 'Feedback is required.'));
 
       feedbackSubmit.addEventListener('click', () => {
         const isRatingValid = rating > 0;
-        if (!isRatingValid) document.getElementById('ratingError').classList.add('show');
-        const isEmailValid = validateField(feedbackEmail, 'feedbackEmailError', val => !val || emailRegex.test(val), 'Valid email is required if provided.');
-        const isMessageValid = validateField(feedbackMessage, 'feedbackMessageError', val => val.trim().length > 0, 'Feedback is required.');
+        if (!isRatingValid) {
+          document.getElementById('ratingError').classList.add('show');
+          document.getElementById('ratingError').textContent = 'Rating is required.';
+        } else {
+          document.getElementById('ratingError').classList.remove('show');
+        }
+        
+        const isEmailValid = validateField(feedbackEmail, 'feedbackEmailError', val => !val || validateEmail(val), 'Valid email is required if provided.');
+        const isMessageValid = validateField(feedbackMessage, 'feedbackMessageError', validateRequired, 'Feedback is required.');
+        
         if (isRatingValid && isEmailValid && isMessageValid) {
           console.log('Feedback Submission:', { rating, name: feedbackName.value, email: feedbackEmail.value, message: feedbackMessage.value });
           showModal('feedbackModal');
@@ -820,16 +1182,25 @@
       const reservationModal = document.getElementById('reservationModal');
       const reservationModalClose = document.getElementById('reservationModalClose');
 
-      reservationName.addEventListener('input', () => validateField(reservationName, 'reservationNameError', val => val.trim().length > 0, 'Name is required.'));
-      reservationPhone.addEventListener('input', () => validateField(reservationPhone, 'reservationPhoneError', val => phoneRegex.test(val), 'Valid phone number is required (10-15 digits).'));
-      reservationDateTime.addEventListener('input', () => validateField(reservationDateTime, 'reservationDateTimeError', val => new Date(val) > new Date(), 'Future date and time are required.'));
-      reservationGuests.addEventListener('input', () => validateField(reservationGuests, 'reservationGuestsError', val => val >= 1 && val <= 10, 'Number of guests (1-10) is required.'));
+      // Real-time validation
+      reservationName.addEventListener('input', () => validateField(reservationName, 'reservationNameError', validateRequired, 'Name is required.'));
+      reservationName.addEventListener('blur', () => validateField(reservationName, 'reservationNameError', validateRequired, 'Name is required.'));
+      
+      reservationPhone.addEventListener('input', () => validateField(reservationPhone, 'reservationPhoneError', validatePhone, 'Valid Philippine phone number is required (e.g., 09123456789).'));
+      reservationPhone.addEventListener('blur', () => validateField(reservationPhone, 'reservationPhoneError', validatePhone, 'Valid Philippine phone number is required (e.g., 09123456789).'));
+      
+      reservationDateTime.addEventListener('input', () => validateField(reservationDateTime, 'reservationDateTimeError', validateDate, 'Future date and time are required.'));
+      reservationDateTime.addEventListener('blur', () => validateField(reservationDateTime, 'reservationDateTimeError', validateDate, 'Future date and time are required.'));
+      
+      reservationGuests.addEventListener('input', () => validateField(reservationGuests, 'reservationGuestsError', val => validateNumberRange(val, 1, 10), 'Number of guests (1-10) is required.'));
+      reservationGuests.addEventListener('blur', () => validateField(reservationGuests, 'reservationGuestsError', val => validateNumberRange(val, 1, 10), 'Number of guests (1-10) is required.'));
 
       reservationSubmit.addEventListener('click', () => {
-        const isNameValid = validateField(reservationName, 'reservationNameError', val => val.trim().length > 0, 'Name is required.');
-        const isPhoneValid = validateField(reservationPhone, 'reservationPhoneError', val => phoneRegex.test(val), 'Valid phone number is required (10-15 digits).');
-        const isDateTimeValid = validateField(reservationDateTime, 'reservationDateTimeError', val => new Date(val) > new Date(), 'Future date and time are required.');
-        const isGuestsValid = validateField(reservationGuests, 'reservationGuestsError', val => val >= 1 && val <= 10, 'Number of guests (1-10) is required.');
+        const isNameValid = validateField(reservationName, 'reservationNameError', validateRequired, 'Name is required.');
+        const isPhoneValid = validateField(reservationPhone, 'reservationPhoneError', validatePhone, 'Valid Philippine phone number is required (e.g., 09123456789).');
+        const isDateTimeValid = validateField(reservationDateTime, 'reservationDateTimeError', validateDate, 'Future date and time are required.');
+        const isGuestsValid = validateField(reservationGuests, 'reservationGuestsError', val => validateNumberRange(val, 1, 10), 'Number of guests (1-10) is required.');
+        
         if (isNameValid && isPhoneValid && isDateTimeValid && isGuestsValid) {
           console.log('Reservation Submission:', {
             name: reservationName.value,
@@ -869,6 +1240,7 @@
       if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<p class="text-gray-600">Your cart is empty.</p>';
         cartTotal.textContent = 'Total: ₱0';
+        updateCartBadge();
         return;
       }
       let total = 0;
@@ -877,24 +1249,73 @@
         total += itemTotal;
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-          <div class="flex items-center">
-            <img src="${item.image}" alt="${item.name}" />
-            <div class="ml-4">
-              <p class="text-sm font-medium">${item.name}</p>
-              <p class="text-sm text-gray-600">₱${item.price}</p>
-            </div>
-          </div>
-          <div class="quantity-controls flex items-center space-x-2">
-            <button onclick="updateQuantity(${index}, -1)">-</button>
-            <span>${item.quantity}</span>
-            <button onclick="updateQuantity(${index}, 1)">+</button>
-            <button onclick="removeFromCart(${index})" class="text-red-600">R</button>
-          </div>
-        `;
+        
+        // Create elements safely to prevent XSS
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'flex items-center';
+        
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.name;
+        
+        const textDiv = document.createElement('div');
+        textDiv.className = 'ml-4';
+        
+        const nameP = document.createElement('p');
+        nameP.className = 'text-sm font-medium';
+        nameP.textContent = item.name;
+        
+        const priceP = document.createElement('p');
+        priceP.className = 'text-sm text-gray-600';
+        priceP.textContent = `₱${item.price}`;
+        
+        textDiv.appendChild(nameP);
+        textDiv.appendChild(priceP);
+        itemDiv.appendChild(img);
+        itemDiv.appendChild(textDiv);
+        
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'quantity-controls flex items-center space-x-2';
+        
+        const minusBtn = document.createElement('button');
+        minusBtn.textContent = '-';
+        minusBtn.addEventListener('click', () => updateQuantity(index, -1));
+        
+        const quantitySpan = document.createElement('span');
+        quantitySpan.textContent = item.quantity;
+        
+        const plusBtn = document.createElement('button');
+        plusBtn.textContent = '+';
+        plusBtn.addEventListener('click', () => updateQuantity(index, 1));
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'R';
+        removeBtn.className = 'text-red-600';
+        removeBtn.addEventListener('click', () => removeFromCart(index));
+        
+        controlsDiv.appendChild(minusBtn);
+        controlsDiv.appendChild(quantitySpan);
+        controlsDiv.appendChild(plusBtn);
+        controlsDiv.appendChild(removeBtn);
+        
+        cartItem.appendChild(itemDiv);
+        cartItem.appendChild(controlsDiv);
         cartItemsContainer.appendChild(cartItem);
       });
       cartTotal.textContent = `Total: ₱${total}`;
+      updateCartBadge();
+    }
+
+    function updateCartBadge() {
+      const cartBadge = document.getElementById('cartBadge');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      if (totalItems > 0) {
+        cartBadge.textContent = totalItems > 99 ? '99+' : totalItems;
+        cartBadge.classList.remove('hidden');
+      } else {
+        cartBadge.classList.add('hidden');
+      }
     }
 
     function addToCart(product) {
@@ -924,6 +1345,48 @@
     cartClose.addEventListener('click', () => hideModal('cartModal'));
     cartModal.addEventListener('click', (e) => {
       if (e.target === cartModal) hideModal('cartModal');
+    });
+
+    // Checkout functionality
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkoutModal = document.getElementById('checkoutModal');
+    const checkoutCancel = document.getElementById('checkoutCancel');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    const orderConfirmationModal = document.getElementById('orderConfirmationModal');
+    const orderConfirmationClose = document.getElementById('orderConfirmationClose');
+
+    checkoutBtn.addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Your cart is empty. Please add some items first.');
+        return;
+      }
+      openCheckoutModal();
+    });
+
+    checkoutCancel.addEventListener('click', () => hideModal('checkoutModal'));
+    document.getElementById('checkoutCloseBtn').addEventListener('click', () => hideModal('checkoutModal'));
+    checkoutModal.addEventListener('click', (e) => {
+      if (e.target === checkoutModal) hideModal('checkoutModal');
+    });
+
+    orderConfirmationClose.addEventListener('click', () => {
+      hideModal('orderConfirmationModal');
+      // Clear cart after successful order
+      cart = [];
+      updateCart();
+    });
+
+    orderConfirmationModal.addEventListener('click', (e) => {
+      if (e.target === orderConfirmationModal) hideModal('orderConfirmationModal');
+    });
+
+    // Header cart button
+    document.getElementById('headerCartBtn').addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Your cart is empty. Add some delicious coffee first!');
+        return;
+      }
+      showModal('cartModal');
     });
 
     // Customize Order Functionality
@@ -979,6 +1442,172 @@
       if (e.target === document.getElementById('customizeModal')) hideModal('customizeModal');
     });
 
+    // Image Full View Modal Functionality
+    function openImageModal(product) {
+      const fullImage = document.getElementById('fullImage');
+      const imageTitle = document.getElementById('imageTitle');
+      const imagePrice = document.getElementById('imagePrice');
+      const imageModal = document.getElementById('imageModal');
+      const imageModalClose = document.getElementById('imageModalClose');
+      
+      fullImage.src = product.image;
+      fullImage.alt = product.name;
+      imageTitle.textContent = product.name;
+      imagePrice.textContent = `₱${product.price}`;
+      
+      showModal('imageModal');
+    }
+
+    // Image modal event listeners
+    document.getElementById('imageModalClose').addEventListener('click', () => hideModal('imageModal'));
+    document.getElementById('imageModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('imageModal')) hideModal('imageModal');
+    });
+
+    // Keyboard support for image modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const imageModal = document.getElementById('imageModal');
+        if (imageModal.classList.contains('show')) {
+          hideModal('imageModal');
+        }
+      }
+    });
+
+    // Checkout Modal Functions
+    function openCheckoutModal() {
+      const checkoutItems = document.getElementById('checkoutItems');
+      const checkoutTotal = document.getElementById('checkoutTotal');
+      
+      // Display order summary
+      checkoutItems.innerHTML = '';
+      let total = 0;
+      
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'flex justify-between items-center text-sm';
+        itemDiv.innerHTML = `
+          <span>${item.name} x${item.quantity}</span>
+          <span>₱${itemTotal}</span>
+        `;
+        checkoutItems.appendChild(itemDiv);
+      });
+      
+      checkoutTotal.textContent = `₱${total}`;
+      
+      // Setup checkout form validation
+      setupCheckoutFormValidation();
+      
+      showModal('checkoutModal');
+    }
+
+    function setupCheckoutFormValidation() {
+      const checkoutName = document.getElementById('checkoutName');
+      const checkoutPhone = document.getElementById('checkoutPhone');
+      const checkoutEmail = document.getElementById('checkoutEmail');
+      const checkoutAddress = document.getElementById('checkoutAddress');
+      const placeOrderBtn = document.getElementById('placeOrderBtn');
+
+      // Real-time validation
+      checkoutName.addEventListener('input', () => validateField(checkoutName, 'checkoutNameError', validateRequired, 'Full name is required.'));
+      checkoutName.addEventListener('blur', () => validateField(checkoutName, 'checkoutNameError', validateRequired, 'Full name is required.'));
+      
+      checkoutPhone.addEventListener('input', () => validateField(checkoutPhone, 'checkoutPhoneError', validatePhone, 'Valid Philippine phone number is required.'));
+      checkoutPhone.addEventListener('blur', () => validateField(checkoutPhone, 'checkoutPhoneError', validatePhone, 'Valid Philippine phone number is required.'));
+      
+      checkoutEmail.addEventListener('input', () => validateField(checkoutEmail, 'checkoutEmailError', validateEmail, 'Valid email is required.'));
+      checkoutEmail.addEventListener('blur', () => validateField(checkoutEmail, 'checkoutEmailError', validateEmail, 'Valid email is required.'));
+      
+      checkoutAddress.addEventListener('input', () => validateField(checkoutAddress, 'checkoutAddressError', validateRequired, 'Delivery address is required.'));
+      checkoutAddress.addEventListener('blur', () => validateField(checkoutAddress, 'checkoutAddressError', validateRequired, 'Delivery address is required.'));
+
+      // Place order button
+      placeOrderBtn.addEventListener('click', () => {
+        const isNameValid = validateField(checkoutName, 'checkoutNameError', validateRequired, 'Full name is required.');
+        const isPhoneValid = validateField(checkoutPhone, 'checkoutPhoneError', validatePhone, 'Valid Philippine phone number is required.');
+        const isEmailValid = validateField(checkoutEmail, 'checkoutEmailError', validateEmail, 'Valid email is required.');
+        const isAddressValid = validateField(checkoutAddress, 'checkoutAddressError', validateRequired, 'Delivery address is required.');
+        
+        if (isNameValid && isPhoneValid && isEmailValid && isAddressValid) {
+          processOrder();
+        }
+      });
+    }
+
+    function processOrder() {
+      const checkoutName = document.getElementById('checkoutName');
+      const checkoutPhone = document.getElementById('checkoutPhone');
+      const checkoutEmail = document.getElementById('checkoutEmail');
+      const checkoutAddress = document.getElementById('checkoutAddress');
+      const checkoutNotes = document.getElementById('checkoutNotes');
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      
+      // Generate order ID
+      const orderId = 'BK' + Date.now().toString().slice(-8);
+      
+      // Calculate total
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+      });
+      
+      // Create order object
+      const order = {
+        orderId: orderId,
+        customer: {
+          name: checkoutName.value,
+          phone: checkoutPhone.value,
+          email: checkoutEmail.value,
+          address: checkoutAddress.value,
+          notes: checkoutNotes.value
+        },
+        items: [...cart],
+        total: total,
+        paymentMethod: paymentMethod,
+        orderDate: new Date().toISOString(),
+        status: 'pending'
+      };
+      
+      // Log order details (in real app, this would be sent to server)
+      console.log('Order placed:', order);
+      
+      // Show confirmation
+      showOrderConfirmation(order);
+      
+      // Clear checkout form
+      checkoutName.value = '';
+      checkoutPhone.value = '';
+      checkoutEmail.value = '';
+      checkoutAddress.value = '';
+      checkoutNotes.value = '';
+      
+      // Hide checkout modal
+      hideModal('checkoutModal');
+    }
+
+    function showOrderConfirmation(order) {
+      const orderId = document.getElementById('orderId');
+      const orderTotal = document.getElementById('orderTotal');
+      const deliveryTime = document.getElementById('deliveryTime');
+      
+      orderId.textContent = order.orderId;
+      orderTotal.textContent = `₱${order.total}`;
+      
+      // Calculate estimated delivery time (30-45 minutes)
+      const deliveryDate = new Date();
+      deliveryDate.setMinutes(deliveryDate.getMinutes() + 30 + Math.floor(Math.random() * 15));
+      deliveryTime.textContent = deliveryDate.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      
+      showModal('orderConfirmationModal');
+    }
+
     // Product + Pagination
     const products = [
       { name: 'Classic Espresso', price: 150, image: 'https://i.pinimg.com/736x/f0/65/5f/f0655f2737da76be9b4ac435c65e3d9b.jpg' },
@@ -1012,14 +1641,53 @@
       paginatedProducts.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card bg-white shadow-lg rounded-lg overflow-hidden';
-        card.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
-          <div class="p-4 text-center">
-            <h3 class="text-xl font-medium text-black">${product.name}</h3>
-            <p class="text-gray-600 mt-1 text-sm opacity-70">₱${product.price}</p>
-            <button class="mt-2 px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition" onclick='openCustomizeModal(${JSON.stringify(product)})'>Add to Cart</button>
-          </div>
+        
+        // Create elements safely to prevent XSS
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'relative w-full h-48 overflow-hidden cursor-pointer group';
+        
+        const img = document.createElement('img');
+        img.src = product.image;
+        img.alt = product.name;
+        img.className = 'w-full h-full object-cover transition-all duration-300 group-hover:scale-105';
+        
+        // Add click event to open full view
+        imgContainer.addEventListener('click', () => openImageModal(product));
+        
+        // Add zoom icon overlay
+        const zoomIcon = document.createElement('div');
+        zoomIcon.className = 'absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center';
+        zoomIcon.innerHTML = `
+          <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+          </svg>
         `;
+        
+        imgContainer.appendChild(img);
+        imgContainer.appendChild(zoomIcon);
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'p-4 text-center';
+        
+        const title = document.createElement('h3');
+        title.className = 'text-xl font-medium text-black';
+        title.textContent = product.name;
+        
+        const price = document.createElement('p');
+        price.className = 'text-gray-600 mt-1 text-sm opacity-70';
+        price.textContent = `₱${product.price}`;
+        
+        const addButton = document.createElement('button');
+        addButton.className = 'mt-2 px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition';
+        addButton.textContent = 'Add to Cart';
+        addButton.addEventListener('click', () => openCustomizeModal(product));
+        
+        contentDiv.appendChild(title);
+        contentDiv.appendChild(price);
+        contentDiv.appendChild(addButton);
+        
+        card.appendChild(imgContainer);
+        card.appendChild(contentDiv);
         productContainer.appendChild(card);
       });
     }
