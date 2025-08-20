@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BossingKape</title>
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3047/3047927.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Playfair Display', serif;
+    }
+    .bg-lightbrown {
+      background-color: #e7d9c3;
+    }
+    .hero-image {
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+    }
+    .product-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    .pagination-btn {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .pagination-btn:hover:not(:disabled) {
+      background-color: #f3f4f6;
+      transform: scale(1.05);
+    }
+    .pagination-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .modal.show {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-content {
+      background-color: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: scale(0.95);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .modal.show .modal-content {
+      transform: scale(1);
+    }
+    .modal-close {
+      background-color: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 4px;
+      margin-top: 16px;
+      transition: background-color 0.2s ease;
+    }
+    .modal-close:hover {
+      background-color: #333;
+    }
+    #cartModal, #customizeModal {
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    #cartModal .modal-content, #customizeModal .modal-content {
+      max-width: 500px;
+      width: 100%;
+      text-align: left;
+      position: relative;
+      bottom: 80px;
+      right: 20px;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .cart-item img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .quantity-controls button {
+      background-color: #000;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+    .quantity-controls button:hover {
+      background-color: #333;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #e7d9c3;
+    }
+    .error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .error-message.show {
+      display: block;
+    }
+    .input-error {
+      border-color: #ef4444 !important;
+      animation: shake 0.3s ease;
+    }
+    .input-valid {
+      border-color: #10b981 !important;
+      transition: border-color 0.3s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    #ratingStars span:hover {
+      color: #FFD700;
+      transform: scale(1.2);
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    @media (max-width: 640px) {
+      .modal-content {
+        width: 95%;
+        padding: 16px;
+      }
+      #cartModal .modal-content, #customizeModal .modal-content {
+        bottom: 60px;
+        right: 10px;
+      }
+      .hero-image {
+        height: 50vh;
+      }
+      .hero-image h1 {
+        font-size: 2.5rem;
+      }
+      .hero-image p {
+        font-size: 1rem;
+      }
+      .product-card img {
+        height: 160px;
+      }
+      .error-message {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-lightbrown text-black">
+  <!-- Header -->
+  <header class="flex justify-between items-center p-4 border-b border-gray-400 bg-lightbrown sticky top-0 z-50">
+    <div class="flex items-center space-x-2">
+      <img src="https://cdn-icons-png.flaticon.com/512/3047/3047927.png" alt="Logo" class="w-10 h-10 object-cover" />
+      <span class="text-xl font-semibold text-black">BossingKape</span>
+    </div>
+    <nav class="hidden md:flex space-x-6 text-sm font-medium">
+      <a href="#about" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('about')">About</a>
+      <a href="#products" class="text-black hover:text-gray-700 hover:underline transition">Menu</a>
+      <a href="#visit" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('visit')">Visit Us</a>
+      <a href="#contact" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('contact')">Contact Us</a>
+    </nav>
+    <div class="md:hidden">
+      <button id="hamburger" class="flex flex-col justify-between w-6 h-4 cursor-pointer">
+        <span class="w-full h-0.5 bg-black transition-transform"></span>
+        <span class="w-full h-0.5 bg-black transition-transform"></span>
+        <span class="w-full h-0.5 bg-black transition-transform"></span>
+      </button>
+    </div>
+    <nav id="mobileNav" class="hidden absolute top-16 right-4 bg-white shadow-md rounded-md p-4">
+      <a href="#about" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('about')">About</a>
+      <a href="#products" class="block py-2 text-black hover:bg-gray-100 transition">Menu</a>
+      <a href="#visit" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('visit')">Visit Us</a>
+      <a href="#contact" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('contact')">Contact Us</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section with Slideshow -->
+  <section id="heroSection" class="relative h-[70vh] hero-image">
+    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-center px-4">
+      <div>
+        <h1 class="text-white text-5xl font-bold mb-4 drop-shadow-lg">BossingKape</h1>
+        <p class="text-white text-lg max-w-xl mx-auto drop-shadow-md">Taste the legacy of Pinoy luxury — locally roasted, globally inspired. Your coffee. Your power. Your BossingKape.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 px-6 max-w-5xl mx-auto text-center hidden">
+    <h2 class="text-3xl font-semibold mb-4">About BossingKape</h2>
+    <p class="text-gray-700 max-w-2xl mx-auto text-lg">
+      At <strong>BossingKape</strong>, we bring you more than just coffee — we deliver a taste of tradition, excellence, and sophistication. Brewed with premium beans, roasted by hand, and served with timeless Filipino pride.
+    </p>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="bg-white py-12">
+    <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div>
+        <h3 class="text-xl font-semibold mb-2">☕ Premium Beans</h3>
+        <p class="text-gray-600">We only use high-altitude Arabica and carefully selected Robusta for bold, rich flavors.</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold mb-2">🔥 Local Roasting</h3>
+        <p class="text-gray-600">Expertly roasted in small batches right here in the Philippines, for unmatched freshness.</p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold mb-2">👑 Legacy Taste</h3>
+        <p class="text-gray-600">Old money vibes. Timeless brews. Taste the elegance of heritage in every cup.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Section -->
+  <section id="products" class="py-16 px-6 max-w-6xl mx-auto">
+    <h2 class="text-3xl font-semibold mb-8 text-center">Our Signature Brews</h2>
+    <div class="mb-8 flex justify-center">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search for coffee..."
+        class="w-full max-w-md px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+      />
+    </div>
+    <div id="productContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
+    <div class="mt-12 flex justify-center">
+      <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+        <button id="prevBtn" class="pagination-btn px-4 py-2 border border-gray-400 bg-white text-sm font-medium text-black rounded-l-md">Previous</button>
+        <div id="paginationNumbers" class="flex"></div>
+        <button id="nextBtn" class="pagination-btn px-4 py-2 border border-gray-400 bg-white text-sm font-medium text-black rounded-r-md">Next</button>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Visit Us Section -->
+  <section id="visit" class="bg-white py-16 text-center hidden">
+    <h2 class="text-3xl font-semibold mb-4">Visit BossingKape</h2>
+    <p class="text-gray-700 text-lg mb-2">📍 Find us at: 123 Heritage St., Makati City, PH</p>
+    <p class="text-gray-700 text-lg">📞 Call us: +63 900 123 4567</p>
+    <p class="text-gray-700 text-lg mt-4">Open daily from 7AM to 10PM — let's brew greatness together.</p>
+    <div class="max-w-md mx-auto mt-8">
+      <h3 class="text-2xl font-semibold mb-4">Reserve a Table</h3>
+      <div class="space-y-6">
+        <div>
+          <label for="reservationName" class="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            type="text"
+            id="reservationName"
+            placeholder="Your Name"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="reservationNameError"
+          />
+          <p id="reservationNameError" class="error-message">Name is required.</p>
+        </div>
+        <div>
+          <label for="reservationPhone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <input
+            type="tel"
+            id="reservationPhone"
+            placeholder="Your Phone Number"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="reservationPhoneError"
+          />
+          <p id="reservationPhoneError" class="error-message">Valid phone number is required (10-15 digits).</p>
+        </div>
+        <div>
+          <label for="reservationDateTime" class="block text-sm font-medium text-gray-700">Date and Time</label>
+          <input
+            type="datetime-local"
+            id="reservationDateTime"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="reservationDateTimeError"
+          />
+          <p id="reservationDateTimeError" class="error-message">Future date and time are required.</p>
+        </div>
+        <div>
+          <label for="reservationGuests" class="block text-sm font-medium text-gray-700">Number of Guests</label>
+          <input
+            type="number"
+            id="reservationGuests"
+            placeholder="Number of Guests"
+            min="1"
+            max="10"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="reservationGuestsError"
+          />
+          <p id="reservationGuestsError" class="error-message">Number of guests (1-10) is required.</p>
+        </div>
+        <div>
+          <label for="reservationRequests" class="block text-sm font-medium text-gray-700">Special Requests (Optional)</label>
+          <textarea
+            id="reservationRequests"
+            placeholder="Special Requests"
+            rows="3"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          ></textarea>
+        </div>
+        <button
+          id="reservationSubmit"
+          class="w-full px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition"
+        >
+          Book Reservation
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+  <section id="contact" class="bg-white py-16 text-center hidden">
+    <h2 class="text-3xl font-semibold mb-6">Contact Us</h2>
+    <p class="text-gray-700 text-lg mb-6 max-w-2xl mx-auto">Have questions or feedback? Reach out to us, and let's brew something great together!</p>
+    <div class="max-w-md mx-auto">
+      <div class="space-y-6">
+        <div>
+          <label for="contactName" class="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            type="text"
+            id="contactName"
+            placeholder="Your Name"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="contactNameError"
+          />
+          <p id="contactNameError" class="error-message">Name is required.</p>
+        </div>
+        <div>
+          <label for="contactEmail" class="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            id="contactEmail"
+            placeholder="Your Email"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="contactEmailError"
+          />
+          <p id="contactEmailError" class="error-message">Valid email is required.</p>
+        </div>
+        <div>
+          <label for="contactMessage" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            id="contactMessage"
+            placeholder="Your Message"
+            rows="4"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="contactMessageError"
+          ></textarea>
+          <p id="contactMessageError" class="error-message">Message is required.</p>
+        </div>
+        <button
+          id="contactSubmit"
+          class="w-full px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition"
+        >
+          Send Message
+        </button>
+      </div>
+    </div>
+    <div class="max-w-md mx-auto mt-8">
+      <h3 class="text-2xl font-semibold mb-4">Share Your Feedback</h3>
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Rating</label>
+          <div id="ratingStars" class="flex justify-center space-x-2">
+            <span class="cursor-pointer text-2xl" data-value="1">★</span>
+            <span class="cursor-pointer text-2xl" data-value="2">★</span>
+            <span class="cursor-pointer text-2xl" data-value="3">★</span>
+            <span class="cursor-pointer text-2xl" data-value="4">★</span>
+            <span class="cursor-pointer text-2xl" data-value="5">★</span>
+          </div>
+          <p id="ratingError" class="error-message">Rating is required.</p>
+          <p id="ratingValue" class="text-sm text-gray-600 mt-2"></p>
+        </div>
+        <div>
+          <label for="feedbackName" class="block text-sm font-medium text-gray-700">Name (Optional)</label>
+          <input
+            type="text"
+            id="feedbackName"
+            placeholder="Your Name"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          />
+        </div>
+        <div>
+          <label for="feedbackEmail" class="block text-sm font-medium text-gray-700">Email (Optional)</label>
+          <input
+            type="email"
+            id="feedbackEmail"
+            placeholder="Your Email"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="feedbackEmailError"
+          />
+          <p id="feedbackEmailError" class="error-message">Valid email is required if provided.</p>
+        </div>
+        <div>
+          <label for="feedbackMessage" class="block text-sm font-medium text-gray-700">Feedback</label>
+          <textarea
+            id="feedbackMessage"
+            placeholder="Your Feedback"
+            rows="4"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="feedbackMessageError"
+          ></textarea>
+          <p id="feedbackMessageError" class="error-message">Feedback is required.</p>
+        </div>
+        <button
+          id="feedbackSubmit"
+          class="w-full px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition"
+        >
+          Submit Feedback
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section id="newsletterSection" class="bg-white py-12 text-center">
+    <h2 class="text-3xl font-semibold mb-4">Join Our Coffee Club</h2>
+    <p class="text-gray-700 text-lg mb-6 max-w-2xl mx-auto">Stay updated with exclusive offers and new brews!</p>
+    <div class="max-w-md mx-auto">
+      <div class="space-y-6">
+        <div>
+          <label for="newsletterEmail" class="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            id="newsletterEmail"
+            placeholder="Your Email"
+            class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            aria-describedby="newsletterEmailError"
+          />
+          <p id="newsletterEmailError" class="error-message">Valid email is required.</p>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            id="newsletterConsent"
+            class="mr-2"
+            aria-describedby="newsletterConsentError"
+          />
+          <label for="newsletterConsent" class="text-gray-700 text-sm">
+            I agree to receive promotional emails from BossingKape.
+          </label>
+        </div>
+        <p id="newsletterConsentError" class="error-message">Consent is required.</p>
+        <button
+          id="newsletterSubmit"
+          class="w-full px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition"
+        >
+          Subscribe
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Modal -->
+  <div id="contactModal" class="modal" aria-label="Contact Confirmation Modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-semibold mb-4">Message Sent!</h2>
+      <p class="text-gray-700 mb-4">Thank you for reaching out to BossingKape. We'll get back to you soon!</p>
+      <button id="modalClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" class="modal" aria-label="Cart Modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-semibold mb-4">Your Cart</h2>
+      <div id="cartItems" class="mb-4"></div>
+      <p id="cartTotal" class="text-lg font-semibold mb-4"></p>
+      <button id="cartClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Customize Order Modal -->
+  <div id="customizeModal" class="modal" aria-label="Customize Order Modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-semibold mb-4">Customize Your <span id="customizeProductName"></span></h2>
+      <div class="space-y-6">
+        <div>
+          <label for="milkType" class="block text-sm font-medium text-gray-700">Milk Type</label>
+          <select id="milkType" class="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-black">
+            <option value="whole">Whole Milk</option>
+            <option value="oat">Oat Milk (₱20)</option>
+            <option value="almond">Almond Milk (₱20)</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div>
+          <label for="sweetness" class="block text-sm font-medium text-gray-700">Sweetness Level</label>
+          <input
+            type="range"
+            id="sweetness"
+            min="0"
+            max="100"
+            value="50"
+            class="w-full"
+          />
+          <span id="sweetnessValue" class="text-sm text-gray-600">50%</span>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Add-ons</label>
+          <label class="flex items-center">
+            <input type="checkbox" id="whippedCream" class="mr-2" /> Whipped Cream (₱30)
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" id="extraShot" class="mr-2" /> Extra Espresso Shot (₱50)
+          </label>
+        </div>
+        <p id="customizePrice" class="text-lg font-semibold"></p>
+        <button id="customizeConfirm" class="w-full px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition">
+          Add to Cart
+        </button>
+        <button id="customizeCancel" class="modal-close">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal" aria-label="Feedback Confirmation Modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-semibold mb-4">Thank You!</h2>
+      <p class="text-gray-700 mb-4">We appreciate your feedback and will use it to make BossingKape even better!</p>
+      <button id="feedbackModalClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Reservation Modal -->
+  <div id="reservationModal" class="modal" aria-label="Reservation Confirmation Modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-semibold mb-4">Reservation Confirmed!</h2>
+      <p class="text-gray-700 mb-4">We've reserved your table. You'll receive a confirmation soon!</p>
+      <button id="reservationModalClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Newsletter Modal -->
+  <div id="newsletterModal" class="modal" aria-label="Newsletter Subscription Modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-semibold mb-4">Subscribed!</h2>
+      <p class="text-gray-700 mb-4">You're now part of the BossingKape Coffee Club. Expect exciting updates soon!</p>
+      <button id="newsletterModalClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Arrow Up Button -->
+  <button id="scrollTopBtn" class="fixed bottom-6 right-6 hidden p-3 bg-black text-white rounded-full shadow-lg hover:bg-gray-800 transition">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 border-t border-gray-400 text-sm text-black">
+    © 2025 BossingKape. All rights reserved.
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Hero Section Slideshow
+    const heroImages = [
+      'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1600&q=80',
+      'https://i.pinimg.com/1200x/f4/b4/68/f4b468c720a97521602be6095de1abec.jpg',
+      'https://i.pinimg.com/1200x/a7/8c/0e/a78c0e946afc6ed036892dbc279da92b.jpg'
+    ];
+    let currentHeroImageIndex = 0;
+    const heroSection = document.getElementById('heroSection');
+
+    function changeHeroImage() {
+      heroSection.style.backgroundImage = `url('${heroImages[currentHeroImageIndex]}')`;
+      currentHeroImageIndex = (currentHeroImageIndex + 1) % heroImages.length;
+    }
+
+    changeHeroImage();
+    setInterval(changeHeroImage, 5000);
+
+    // Hamburger Menu Toggle
+    document.getElementById('hamburger').addEventListener('click', () => {
+      const mobileNav = document.getElementById('mobileNav');
+      mobileNav.classList.toggle('hidden');
+      document.querySelectorAll('#hamburger span').forEach((span, index) => {
+        span.classList.toggle('transform', mobileNav.classList.contains('hidden'));
+        if (!mobileNav.classList.contains('hidden')) {
+          span.style.transform = index === 0 ? 'rotate(45deg) translate(0.4rem, 0.4rem)' :
+            index === 1 ? 'scale(0)' : 'rotate(-45deg) translate(0.4rem, -0.4rem)';
+        } else {
+          span.style.transform = '';
+        }
+      });
+    });
+
+    document.querySelectorAll('#mobileNav a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileNav').classList.add('hidden');
+        document.querySelectorAll('#hamburger span').forEach(span => {
+          span.style.transform = '';
+        });
+      });
+    });
+
+    // Toggle Sections
+    let visibleSection = null;
+
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (visibleSection === sectionId) {
+        section.classList.add('hidden');
+        visibleSection = null;
+      } else {
+        if (visibleSection) {
+          document.getElementById(visibleSection).classList.add('hidden');
+        }
+        section.classList.remove('hidden');
+        visibleSection = sectionId;
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Scroll to Top Button
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopBtn.classList.remove('hidden');
+      } else {
+        scrollTopBtn.classList.add('hidden');
+      }
+    });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Modal Functions
+    function showModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.add('show');
+    }
+
+    function hideModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('show');
+    }
+
+    // Validation Functions
+    function validateField(input, errorId, validationFn, errorMessage) {
+      const errorElement = document.getElementById(errorId);
+      const isValid = validationFn(input);
+      if (!isValid) {
+        input.classList.add('input-error');
+        input.classList.remove('input-valid');
+        input.setAttribute('aria-invalid', 'true');
+        errorElement.textContent = errorMessage;
+        errorElement.classList.add('show');
+      } else {
+        input.classList.remove('input-error');
+        input.classList.add('input-valid');
+        input.setAttribute('aria-invalid', 'false');
+        errorElement.classList.remove('show');
+        setTimeout(() => input.classList.remove('input-valid'), 1000);
+      }
+      return isValid;
+    }
+
+    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+    const phoneRegex = /^\+?\d{10,15}$/;
+
+    // Contact Form Validation
+    function setupContactForm() {
+      const contactName = document.getElementById('contactName');
+      const contactEmail = document.getElementById('contactEmail');
+      const contactMessage = document.getElementById('contactMessage');
+      const contactSubmit = document.getElementById('contactSubmit');
+      const contactModal = document.getElementById('contactModal');
+      const modalClose = document.getElementById('modalClose');
+
+      contactName.addEventListener('input', () => validateField(contactName, 'contactNameError', val => val.trim().length > 0, 'Name is required.'));
+      contactEmail.addEventListener('input', () => validateField(contactEmail, 'contactEmailError', val => emailRegex.test(val), 'Valid email is required.'));
+      contactMessage.addEventListener('input', () => validateField(contactMessage, 'contactMessageError', val => val.trim().length > 0, 'Message is required.'));
+
+      contactSubmit.addEventListener('click', () => {
+        const isNameValid = validateField(contactName, 'contactNameError', val => val.trim().length > 0, 'Name is required.');
+        const isEmailValid = validateField(contactEmail, 'contactEmailError', val => emailRegex.test(val), 'Valid email is required.');
+        const isMessageValid = validateField(contactMessage, 'contactMessageError', val => val.trim().length > 0, 'Message is required.');
+        if (isNameValid && isEmailValid && isMessageValid) {
+          console.log('Contact Form Submission:', { name: contactName.value, email: contactEmail.value, message: contactMessage.value });
+          showModal('contactModal');
+          contactName.value = '';
+          contactEmail.value = '';
+          contactMessage.value = '';
+          [contactName, contactEmail, contactMessage].forEach(input => {
+            input.classList.remove('input-error', 'input-valid');
+            document.getElementById(`${input.id}Error`).classList.remove('show');
+          });
+        }
+      });
+
+      modalClose.addEventListener('click', () => hideModal('contactModal'));
+      contactModal.addEventListener('click', (e) => {
+        if (e.target === contactModal) hideModal('contactModal');
+      });
+    }
+
+    // Newsletter Form Validation
+    function setupNewsletterForm() {
+      const newsletterEmail = document.getElementById('newsletterEmail');
+      const newsletterConsent = document.getElementById('newsletterConsent');
+      const newsletterSubmit = document.getElementById('newsletterSubmit');
+      const newsletterModal = document.getElementById('newsletterModal');
+      const newsletterModalClose = document.getElementById('newsletterModalClose');
+
+      newsletterEmail.addEventListener('input', () => validateField(newsletterEmail, 'newsletterEmailError', val => emailRegex.test(val), 'Valid email is required.'));
+      newsletterConsent.addEventListener('change', () => validateField(newsletterConsent, 'newsletterConsentError', val => val, 'Consent is required.'));
+
+      newsletterSubmit.addEventListener('click', () => {
+        const isEmailValid = validateField(newsletterEmail, 'newsletterEmailError', val => emailRegex.test(val), 'Valid email is required.');
+        const isConsentValid = validateField(newsletterConsent, 'newsletterConsentError', val => val, 'Consent is required.');
+        if (isEmailValid && isConsentValid) {
+          console.log('Newsletter Subscription:', { email: newsletterEmail.value });
+          showModal('newsletterModal');
+          newsletterEmail.value = '';
+          newsletterConsent.checked = false;
+          newsletterEmail.classList.remove('input-error', 'input-valid');
+          document.getElementById('newsletterEmailError').classList.remove('show');
+          document.getElementById('newsletterConsentError').classList.remove('show');
+        }
+      });
+
+      newsletterModalClose.addEventListener('click', () => hideModal('newsletterModal'));
+      newsletterModal.addEventListener('click', (e) => {
+        if (e.target === newsletterModal) hideModal('newsletterModal');
+      });
+    }
+
+    // Feedback Form Validation
+    function setupFeedbackForm() {
+      let rating = 0;
+      const feedbackName = document.getElementById('feedbackName');
+      const feedbackEmail = document.getElementById('feedbackEmail');
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      const feedbackSubmit = document.getElementById('feedbackSubmit');
+      const feedbackModal = document.getElementById('feedbackModal');
+      const feedbackModalClose = document.getElementById('feedbackModalClose');
+
+      document.querySelectorAll('#ratingStars span').forEach(star => {
+        star.addEventListener('click', () => {
+          rating = parseInt(star.dataset.value);
+          document.querySelectorAll('#ratingStars span').forEach(s => {
+            s.style.color = s.dataset.value <= rating ? '#FFD700' : '#D1D5DB';
+          });
+          document.getElementById('ratingValue').textContent = `${rating} Star${rating > 1 ? 's' : ''}`;
+          document.getElementById('ratingError').classList.remove('show');
+        });
+      });
+
+      feedbackEmail.addEventListener('input', () => validateField(feedbackEmail, 'feedbackEmailError', val => !val || emailRegex.test(val), 'Valid email is required if provided.'));
+      feedbackMessage.addEventListener('input', () => validateField(feedbackMessage, 'feedbackMessageError', val => val.trim().length > 0, 'Feedback is required.'));
+
+      feedbackSubmit.addEventListener('click', () => {
+        const isRatingValid = rating > 0;
+        if (!isRatingValid) document.getElementById('ratingError').classList.add('show');
+        const isEmailValid = validateField(feedbackEmail, 'feedbackEmailError', val => !val || emailRegex.test(val), 'Valid email is required if provided.');
+        const isMessageValid = validateField(feedbackMessage, 'feedbackMessageError', val => val.trim().length > 0, 'Feedback is required.');
+        if (isRatingValid && isEmailValid && isMessageValid) {
+          console.log('Feedback Submission:', { rating, name: feedbackName.value, email: feedbackEmail.value, message: feedbackMessage.value });
+          showModal('feedbackModal');
+          feedbackName.value = '';
+          feedbackEmail.value = '';
+          feedbackMessage.value = '';
+          rating = 0;
+          document.querySelectorAll('#ratingStars span').forEach(s => s.style.color = '#D1D5DB');
+          document.getElementById('ratingValue').textContent = '';
+          [feedbackEmail, feedbackMessage].forEach(input => {
+            input.classList.remove('input-error', 'input-valid');
+            document.getElementById(`${input.id}Error`).classList.remove('show');
+          });
+          document.getElementById('ratingError').classList.remove('show');
+        }
+      });
+
+      feedbackModalClose.addEventListener('click', () => hideModal('feedbackModal'));
+      feedbackModal.addEventListener('click', (e) => {
+        if (e.target === feedbackModal) hideModal('feedbackModal');
+      });
+    }
+
+    // Reservation Form Validation
+    function setupReservationForm() {
+      const reservationName = document.getElementById('reservationName');
+      const reservationPhone = document.getElementById('reservationPhone');
+      const reservationDateTime = document.getElementById('reservationDateTime');
+      const reservationGuests = document.getElementById('reservationGuests');
+      const reservationRequests = document.getElementById('reservationRequests');
+      const reservationSubmit = document.getElementById('reservationSubmit');
+      const reservationModal = document.getElementById('reservationModal');
+      const reservationModalClose = document.getElementById('reservationModalClose');
+
+      reservationName.addEventListener('input', () => validateField(reservationName, 'reservationNameError', val => val.trim().length > 0, 'Name is required.'));
+      reservationPhone.addEventListener('input', () => validateField(reservationPhone, 'reservationPhoneError', val => phoneRegex.test(val), 'Valid phone number is required (10-15 digits).'));
+      reservationDateTime.addEventListener('input', () => validateField(reservationDateTime, 'reservationDateTimeError', val => new Date(val) > new Date(), 'Future date and time are required.'));
+      reservationGuests.addEventListener('input', () => validateField(reservationGuests, 'reservationGuestsError', val => val >= 1 && val <= 10, 'Number of guests (1-10) is required.'));
+
+      reservationSubmit.addEventListener('click', () => {
+        const isNameValid = validateField(reservationName, 'reservationNameError', val => val.trim().length > 0, 'Name is required.');
+        const isPhoneValid = validateField(reservationPhone, 'reservationPhoneError', val => phoneRegex.test(val), 'Valid phone number is required (10-15 digits).');
+        const isDateTimeValid = validateField(reservationDateTime, 'reservationDateTimeError', val => new Date(val) > new Date(), 'Future date and time are required.');
+        const isGuestsValid = validateField(reservationGuests, 'reservationGuestsError', val => val >= 1 && val <= 10, 'Number of guests (1-10) is required.');
+        if (isNameValid && isPhoneValid && isDateTimeValid && isGuestsValid) {
+          console.log('Reservation Submission:', {
+            name: reservationName.value,
+            phone: reservationPhone.value,
+            dateTime: reservationDateTime.value,
+            guests: reservationGuests.value,
+            requests: reservationRequests.value
+          });
+          showModal('reservationModal');
+          reservationName.value = '';
+          reservationPhone.value = '';
+          reservationDateTime.value = '';
+          reservationGuests.value = '';
+          reservationRequests.value = '';
+          [reservationName, reservationPhone, reservationDateTime, reservationGuests].forEach(input => {
+            input.classList.remove('input-error', 'input-valid');
+            document.getElementById(`${input.id}Error`).classList.remove('show');
+          });
+        }
+      });
+
+      reservationModalClose.addEventListener('click', () => hideModal('reservationModal'));
+      reservationModal.addEventListener('click', (e) => {
+        if (e.target === reservationModal) hideModal('reservationModal');
+      });
+    }
+
+    // Cart Functionality
+    let cart = [];
+    const cartModal = document.getElementById('cartModal');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartClose = document.getElementById('cartClose');
+
+    function updateCart() {
+      cartItemsContainer.innerHTML = '';
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="text-gray-600">Your cart is empty.</p>';
+        cartTotal.textContent = 'Total: ₱0';
+        return;
+      }
+      let total = 0;
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+          <div class="flex items-center">
+            <img src="${item.image}" alt="${item.name}" />
+            <div class="ml-4">
+              <p class="text-sm font-medium">${item.name}</p>
+              <p class="text-sm text-gray-600">₱${item.price}</p>
+            </div>
+          </div>
+          <div class="quantity-controls flex items-center space-x-2">
+            <button onclick="updateQuantity(${index}, -1)">-</button>
+            <span>${item.quantity}</span>
+            <button onclick="updateQuantity(${index}, 1)">+</button>
+            <button onclick="removeFromCart(${index})" class="text-red-600">R</button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(cartItem);
+      });
+      cartTotal.textContent = `Total: ₱${total}`;
+    }
+
+    function addToCart(product) {
+      const existingItem = cart.find(item => item.name === product.name);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+      updateCart();
+      showModal('cartModal');
+    }
+
+    function updateQuantity(index, change) {
+      cart[index].quantity += change;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    cartClose.addEventListener('click', () => hideModal('cartModal'));
+    cartModal.addEventListener('click', (e) => {
+      if (e.target === cartModal) hideModal('cartModal');
+    });
+
+    // Customize Order Functionality
+    let currentProduct = null;
+
+    function openCustomizeModal(product) {
+      currentProduct = product;
+      document.getElementById('customizeProductName').textContent = product.name;
+      document.getElementById('milkType').value = 'whole';
+      document.getElementById('sweetness').value = 50;
+      document.getElementById('sweetnessValue').textContent = '50%';
+      document.getElementById('whippedCream').checked = false;
+      document.getElementById('extraShot').checked = false;
+      updateCustomizePrice();
+      showModal('customizeModal');
+    }
+
+    function updateCustomizePrice() {
+      let price = currentProduct.price;
+      const milkType = document.getElementById('milkType').value;
+      const whippedCream = document.getElementById('whippedCream').checked;
+      const extraShot = document.getElementById('extraShot').checked;
+      if (milkType === 'oat' || milkType === 'almond') price += 20;
+      if (whippedCream) price += 30;
+      if (extraShot) price += 50;
+      document.getElementById('customizePrice').textContent = `Price: ₱${price}`;
+      return price;
+    }
+
+    document.getElementById('milkType').addEventListener('change', updateCustomizePrice);
+    document.getElementById('whippedCream').addEventListener('change', updateCustomizePrice);
+    document.getElementById('extraShot').addEventListener('change', updateCustomizePrice);
+    document.getElementById('sweetness').addEventListener('input', (e) => {
+      document.getElementById('sweetnessValue').textContent = `${e.target.value}%`;
+    });
+
+    document.getElementById('customizeConfirm').addEventListener('click', () => {
+      const milkType = document.getElementById('milkType').value;
+      const sweetness = document.getElementById('sweetness').value;
+      const whippedCream = document.getElementById('whippedCream').checked;
+      const extraShot = document.getElementById('extraShot').checked;
+      const customProduct = {
+        ...currentProduct,
+        name: `${currentProduct.name} (${milkType}, ${sweetness}% sweetness${whippedCream ? ', Whipped Cream' : ''}${extraShot ? ', Extra Shot' : ''})`,
+        price: updateCustomizePrice()
+      };
+      addToCart(customProduct);
+      hideModal('customizeModal');
+    });
+
+    document.getElementById('customizeCancel').addEventListener('click', () => hideModal('customizeModal'));
+    document.getElementById('customizeModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('customizeModal')) hideModal('customizeModal');
+    });
+
+    // Product + Pagination
+    const products = [
+      { name: 'Classic Espresso', price: 150, image: 'https://i.pinimg.com/736x/f0/65/5f/f0655f2737da76be9b4ac435c65e3d9b.jpg' },
+      { name: 'Velvet Latte', price: 180, image: 'https://i.pinimg.com/736x/c1/9a/57/c19a570d7eca9395550df63575085a22.jpg' },
+      { name: 'Old Money Cold Brew', price: 200, image: 'https://i.pinimg.com/736x/bb/15/60/bb156021a82846025d1c9ec4a28c5a19.jpg' },
+      { name: 'French Press', price: 160, image: 'https://i.pinimg.com/1200x/f3/ea/30/f3ea3000c40bc673ac637ac9a0be2660.jpg' },
+      { name: 'Cappuccino Royale', price: 190, image: 'https://i.pinimg.com/1200x/02/be/5a/02be5a358f0506d31c075cd92b9e2838.jpg' },
+      { name: 'Mocha Elegance', price: 210, image: 'https://i.pinimg.com/736x/d7/23/3a/d7233a04fd31b7c6e93a2f62fd454c78.jpg' },
+      { name: 'Gold Drip', price: 250, image: 'https://i.pinimg.com/736x/26/b7/d2/26b7d23d7ca1e2e8effc2eacf2509439.jpg' },
+      { name: 'Highland Brew', price: 170, image: 'https://i.pinimg.com/1200x/66/cf/32/66cf32854353283d20f9d8042f01019d.jpg' },
+      { name: 'Luxury Macchiato', price: 195, image: 'https://i.pinimg.com/736x/62/fb/c4/62fbc4203bfe409ea8b5bae15d2df3ae.jpg' }
+    ];
+    const productsPerPage = 3;
+    let currentPage = 1;
+    let filteredProducts = [...products];
+    const productContainer = document.getElementById('productContainer');
+    const paginationNumbers = document.getElementById('paginationNumbers');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const searchInput = document.getElementById('searchInput');
+
+    function displayProducts(page) {
+      productContainer.innerHTML = '';
+      const start = (page - 1) * productsPerPage;
+      const end = start + productsPerPage;
+      const paginatedProducts = filteredProducts.slice(start, end);
+      if (paginatedProducts.length === 0) {
+        productContainer.innerHTML = '<p class="text-center text-gray-600 col-span-3">No products found.</p>';
+        return;
+      }
+      paginatedProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card bg-white shadow-lg rounded-lg overflow-hidden';
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+          <div class="p-4 text-center">
+            <h3 class="text-xl font-medium text-black">${product.name}</h3>
+            <p class="text-gray-600 mt-1 text-sm opacity-70">₱${product.price}</p>
+            <button class="mt-2 px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition" onclick='openCustomizeModal(${JSON.stringify(product)})'>Add to Cart</button>
+          </div>
+        `;
+        productContainer.appendChild(card);
+      });
+    }
+
+    function setupPagination() {
+      paginationNumbers.innerHTML = '';
+      const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
+      for (let i = 1; i <= pageCount; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.className = `pagination-btn px-4 py-2 border-t border-b border-gray-400 bg-white text-sm font-medium text-black ${i === currentPage ? 'bg-black text-white' : ''}`;
+        pageButton.textContent = i;
+        pageButton.addEventListener('click', () => {
+          currentPage = i;
+          displayProducts(currentPage);
+          setupPagination();
+        });
+        paginationNumbers.appendChild(pageButton);
+      }
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === pageCount || pageCount === 0;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        displayProducts(currentPage);
+        setupPagination();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < Math.ceil(filteredProducts.length / productsPerPage)) {
+        currentPage++;
+        displayProducts(currentPage);
+        setupPagination();
+      }
+    });
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(query)
+      );
+      currentPage = 1;
+      displayProducts(currentPage);
+      setupPagination();
+    });
+
+    // Initialize Forms
+    setupContactForm();
+    setupNewsletterForm();
+    setupFeedbackForm();
+    setupReservationForm();
+    displayProducts(currentPage);
+    setupPagination();
+  </script>
+</body>
+</html>
