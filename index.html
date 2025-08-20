@@ -261,6 +261,102 @@
     .checkout-section:focus-within {
       transform: translateY(-2px);
     }
+    
+    /* Enhanced form styling */
+    .form-field {
+      transition: all 0.3s ease;
+      background-color: #ffffff;
+    }
+    
+    .form-field:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      background-color: #fafafa;
+    }
+    
+    .form-field:hover {
+      border-color: #6b7280;
+    }
+    
+    /* Checkbox and radio styling */
+    input[type="checkbox"]:checked {
+      background-color: #000000;
+      border-color: #000000;
+    }
+    
+    input[type="checkbox"]:focus {
+      --tw-ring-color: #000000;
+      --tw-ring-opacity: 0.5;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Button hover effects */
+    button {
+      transition: all 0.3s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-1px);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    /* Section animations */
+    section {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Card hover effects */
+    .bg-white {
+      transition: all 0.3s ease;
+    }
+    
+    .shadow-xl:hover {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #000000, #4b5563);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      section {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      .bg-white {
+        margin: 0.5rem;
+        padding: 1.5rem;
+      }
+      
+      h2 {
+        font-size: 2rem;
+      }
+      
+      .grid {
+        gap: 1rem;
+      }
+    }
     #ratingStars span:hover {
       color: #FFD700;
       transform: scale(1.2);
@@ -288,6 +384,10 @@
         max-height: 85vh;
         margin: 10px;
       }
+      #cateringModal .modal-content, #beanCustomizationModal .modal-content {
+        width: 95%;
+        margin: 10px;
+      }
       .hero-image {
         height: 50vh;
       }
@@ -303,6 +403,17 @@
       .error-message {
         font-size: 0.75rem;
       }
+      /* New form sections mobile optimization */
+      #cateringSection, #beanCustomizationSection {
+        padding: 3rem 1rem;
+      }
+      #cateringSection .bg-white, #beanCustomizationSection .bg-white {
+        padding: 1.5rem;
+        margin: 0;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -313,9 +424,11 @@
       <img src="https://cdn-icons-png.flaticon.com/512/3047/3047927.png" alt="Logo" class="w-10 h-10 object-cover" />
       <span class="text-xl font-semibold text-black">BossingKape</span>
     </div>
-    <nav class="hidden md:flex space-x-6 text-sm font-medium items-center">
+    <nav class="hidden md:flex space-x-4 text-sm font-medium items-center">
       <a href="#about" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('about')">About</a>
       <a href="#products" class="text-black hover:text-gray-700 hover:underline transition">Menu</a>
+      <a href="#cateringSection" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('cateringSection')">Catering</a>
+      <a href="#beanCustomizationSection" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('beanCustomizationSection')">Custom Beans</a>
       <a href="#visit" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('visit')">Visit Us</a>
       <a href="#contact" class="text-black hover:text-gray-700 hover:underline transition" onclick="toggleSection('contact')">Contact Us</a>
       <button id="headerCartBtn" class="relative text-black hover:text-gray-700 transition">
@@ -332,9 +445,11 @@
         <span class="w-full h-0.5 bg-black transition-transform"></span>
       </button>
     </div>
-    <nav id="mobileNav" class="hidden absolute top-16 right-4 bg-white shadow-md rounded-md p-4">
+    <nav id="mobileNav" class="hidden absolute top-16 right-4 bg-white shadow-md rounded-md p-4 w-48">
       <a href="#about" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('about')">About</a>
       <a href="#products" class="block py-2 text-black hover:bg-gray-100 transition">Menu</a>
+      <a href="#cateringSection" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('cateringSection')">Catering</a>
+      <a href="#beanCustomizationSection" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('beanCustomizationSection')">Custom Beans</a>
       <a href="#visit" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('visit')">Visit Us</a>
       <a href="#contact" class="block py-2 text-black hover:bg-gray-100 transition" onclick="toggleSection('contact')">Contact Us</a>
     </nav>
@@ -573,6 +688,418 @@
     </div>
   </section>
 
+  <!-- Corporate Catering Request Section -->
+  <section id="cateringSection" class="bg-gradient-to-br from-gray-50 to-gray-100 py-20 hidden">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-black text-white rounded-full mb-6">
+          <span class="text-2xl">🏢</span>
+        </div>
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Corporate Catering</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Elevate your corporate events with premium coffee service. From board meetings to company celebrations, we deliver excellence that matches your professional standards.</p>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-xl p-10 backdrop-blur-sm">
+        <form id="cateringForm" class="space-y-8">
+          <!-- Company Information -->
+          <div class="bg-gray-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm mr-3">1</span>
+              Company Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="cateringCompany" class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                <input
+                  type="text"
+                  id="cateringCompany"
+                  placeholder="Your Company Name"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringCompanyError"
+                />
+                <p id="cateringCompanyError" class="error-message">Company name is required.</p>
+              </div>
+              <div>
+                <label for="cateringContact" class="block text-sm font-medium text-gray-700 mb-2">Contact Person</label>
+                <input
+                  type="text"
+                  id="cateringContact"
+                  placeholder="Contact Person Name"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringContactError"
+                />
+                <p id="cateringContactError" class="error-message">Contact person is required.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <label for="cateringEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <input
+                  type="email"
+                  id="cateringEmail"
+                  placeholder="contact@company.com"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringEmailError"
+                />
+                <p id="cateringEmailError" class="error-message">Valid email is required.</p>
+              </div>
+              <div>
+                <label for="cateringPhone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  id="cateringPhone"
+                  placeholder="09123456789"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringPhoneError"
+                />
+                <p id="cateringPhoneError" class="error-message">Valid phone number is required.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event Details -->
+          <div class="bg-gray-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm mr-3">2</span>
+              Event Details
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label for="cateringDate" class="block text-sm font-medium text-gray-700 mb-2">Event Date</label>
+                <input
+                  type="date"
+                  id="cateringDate"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringDateError"
+                />
+                <p id="cateringDateError" class="error-message">Event date is required.</p>
+              </div>
+              <div>
+                <label for="cateringTime" class="block text-sm font-medium text-gray-700 mb-2">Event Time</label>
+                <input
+                  type="time"
+                  id="cateringTime"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringTimeError"
+                />
+                <p id="cateringTimeError" class="error-message">Event time is required.</p>
+              </div>
+              <div>
+                <label for="cateringAttendees" class="block text-sm font-medium text-gray-700 mb-2">Number of Attendees</label>
+                <input
+                  type="number"
+                  id="cateringAttendees"
+                  min="10"
+                  max="500"
+                  placeholder="50"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all"
+                  aria-describedby="cateringAttendeesError"
+                />
+                <p id="cateringAttendeesError" class="error-message">Number of attendees (10-500) is required.</p>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <label for="cateringService" class="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
+              <select id="cateringService" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all">
+                <option value="">Select Service Type</option>
+                <option value="coffee-station">Coffee Station Setup</option>
+                <option value="barista-service">Professional Barista Service</option>
+                <option value="full-catering">Full Catering Package</option>
+                <option value="coffee-workshop">Coffee Workshop & Tasting</option>
+                <option value="custom">Custom Service Package</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Menu Selection -->
+          <div class="bg-gray-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm mr-3">3</span>
+              Menu Selection
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="space-y-4">
+                <h4 class="font-semibold text-gray-800 text-lg">☕ Coffee Options</h4>
+                <div class="space-y-3">
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="coffeeOptions" value="espresso" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Espresso</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="coffeeOptions" value="cappuccino" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Cappuccino</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="coffeeOptions" value="latte" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Latte</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="coffeeOptions" value="americano" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Americano</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="coffeeOptions" value="cold-brew" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Cold Brew</span>
+                  </label>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <h4 class="font-semibold text-gray-800 text-lg">🍞 Food Options</h4>
+                <div class="space-y-3">
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="foodOptions" value="pastries" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Pastries & Croissants</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="foodOptions" value="sandwiches" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Gourmet Sandwiches</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="foodOptions" value="cookies" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Artisan Cookies</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="foodOptions" value="fruits" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Fresh Fruit Platter</span>
+                  </label>
+                  <label class="flex items-center p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    <input type="checkbox" name="foodOptions" value="custom-food" class="mr-3 text-black focus:ring-black"> 
+                    <span class="font-medium">Custom Menu</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event Location & Requirements -->
+          <div class="bg-gray-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-sm mr-3">4</span>
+              Location & Requirements
+            </h3>
+            <div class="space-y-6">
+              <div>
+                <label for="cateringLocation" class="block text-sm font-medium text-gray-700 mb-2">Event Location</label>
+                <textarea
+                  id="cateringLocation"
+                  placeholder="Complete event address and venue details"
+                  rows="3"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all resize-none"
+                  aria-describedby="cateringLocationError"
+                ></textarea>
+                <p id="cateringLocationError" class="error-message">Event location is required.</p>
+              </div>
+
+              <div>
+                <label for="cateringRequirements" class="block text-sm font-medium text-gray-700 mb-2">Special Requirements</label>
+                <textarea
+                  id="cateringRequirements"
+                  placeholder="Any special requests, dietary restrictions, equipment needs, or additional requirements"
+                  rows="4"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent form-field transition-all resize-none"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button
+              type="submit"
+              id="cateringSubmit"
+              class="w-full px-8 py-4 bg-gradient-to-r from-black to-gray-800 text-white font-semibold rounded-xl hover:from-gray-800 hover:to-black transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg"
+            >
+              🏢 Request Catering Quote
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coffee Bean Customization Section -->
+  <section id="beanCustomizationSection" class="bg-gradient-to-br from-amber-50 to-orange-50 py-20 hidden">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full mb-6">
+          <span class="text-2xl">🌱</span>
+        </div>
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">Custom Coffee Beans</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Create your perfect blend with our custom coffee bean service. Choose origins, roast levels, and processing methods to craft a unique coffee experience tailored to your taste.</p>
+      </div>
+      
+      <div class="bg-white rounded-2xl shadow-xl p-10 backdrop-blur-sm">
+        <form id="beanCustomizationForm" class="space-y-8">
+          <!-- Personal Information -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-sm mr-3">1</span>
+              Your Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="beanName" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input
+                  type="text"
+                  id="beanName"
+                  placeholder="Your Full Name"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all"
+                  aria-describedby="beanNameError"
+                />
+                <p id="beanNameError" class="error-message">Full name is required.</p>
+              </div>
+              <div>
+                <label for="beanEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <input
+                  type="email"
+                  id="beanEmail"
+                  placeholder="your.email@example.com"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all"
+                  aria-describedby="beanEmailError"
+                />
+                <p id="beanEmailError" class="error-message">Valid email is required.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coffee Origins -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-sm mr-3">2</span>
+              Coffee Origins <span class="text-sm font-normal text-gray-600 ml-2">(Select up to 3)</span>
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <label class="flex items-center p-4 bg-white rounded-lg hover:bg-amber-50 transition-colors cursor-pointer border-2 border-transparent hover:border-amber-200">
+                <input type="checkbox" name="origins" value="philippine" class="mr-3 text-amber-600 focus:ring-amber-500"> 
+                <span class="font-medium">🇵🇭 Philippine</span>
+              </label>
+              <label class="flex items-center p-4 bg-white rounded-lg hover:bg-amber-50 transition-colors cursor-pointer border-2 border-transparent hover:border-amber-200">
+                <input type="checkbox" name="origins" value="colombian" class="mr-3 text-amber-600 focus:ring-amber-500"> 
+                <span class="font-medium">🇨🇴 Colombian</span>
+              </label>
+              <label class="flex items-center p-4 bg-white rounded-lg hover:bg-amber-50 transition-colors cursor-pointer border-2 border-transparent hover:border-amber-200">
+                <input type="checkbox" name="origins" value="ethiopian" class="mr-3 text-amber-600 focus:ring-amber-500"> 
+                <span class="font-medium">🇪🇹 Ethiopian</span>
+              </label>
+              <label class="flex items-center p-4 bg-white rounded-lg hover:bg-amber-50 transition-colors cursor-pointer border-2 border-transparent hover:border-amber-200">
+                <input type="checkbox" name="origins" value="brazilian" class="mr-3 text-amber-600 focus:ring-amber-500"> 
+                <span class="font-medium">🇧🇷 Brazilian</span>
+              </label>
+              <label class="flex items-center p-4 bg-white rounded-lg hover:bg-amber-50 transition-colors cursor-pointer border-2 border-transparent hover:border-amber-200">
+                <input type="checkbox" name="origins" value="guatemalan" class="mr-3 text-amber-600 focus:ring-amber-500"> 
+                <span class="font-medium">🇬🇹 Guatemalan</span>
+              </label>
+              <label class="flex items-center p-4 bg-white rounded-lg hover:bg-amber-50 transition-colors cursor-pointer border-2 border-transparent hover:border-amber-200">
+                <input type="checkbox" name="origins" value="kenyan" class="mr-3 text-amber-600 focus:ring-amber-500"> 
+                <span class="font-medium">🇰🇪 Kenyan</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Roast & Processing -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-sm mr-3">3</span>
+              Roast & Processing
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="beanRoastLevel" class="block text-sm font-medium text-gray-700 mb-2">Roast Level</label>
+                <select id="beanRoastLevel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all">
+                  <option value="">Select Roast Level</option>
+                  <option value="light">Light Roast (Bright, acidic)</option>
+                  <option value="medium-light">Medium-Light Roast (Balanced)</option>
+                  <option value="medium">Medium Roast (Classic)</option>
+                  <option value="medium-dark">Medium-Dark Roast (Rich)</option>
+                  <option value="dark">Dark Roast (Bold, smoky)</option>
+                  <option value="espresso">Espresso Roast (Intense)</option>
+                </select>
+              </div>
+              <div>
+                <label for="beanProcessing" class="block text-sm font-medium text-gray-700 mb-2">Processing Method</label>
+                <select id="beanProcessing" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all">
+                  <option value="">Select Processing Method</option>
+                  <option value="washed">Washed (Clean, bright)</option>
+                  <option value="natural">Natural (Fruity, full-bodied)</option>
+                  <option value="honey">Honey (Sweet, complex)</option>
+                  <option value="anaerobic">Anaerobic (Unique, experimental)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity & Preferences -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-sm mr-3">4</span>
+              Quantity & Preferences
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label for="beanQuantity" class="block text-sm font-medium text-gray-700 mb-2">Quantity per Order</label>
+                <select id="beanQuantity" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all">
+                  <option value="">Select Quantity</option>
+                  <option value="250">250g (Small batch)</option>
+                  <option value="500">500g (Medium batch)</option>
+                  <option value="1000">1kg (Large batch)</option>
+                  <option value="2500">2.5kg (Bulk)</option>
+                </select>
+              </div>
+              <div>
+                <label for="beanFrequency" class="block text-sm font-medium text-gray-700 mb-2">Order Frequency</label>
+                <select id="beanFrequency" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all">
+                  <option value="">Select Frequency</option>
+                  <option value="one-time">One-time Order</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="biweekly">Every 2 Weeks</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+              <div>
+                <label for="beanGrind" class="block text-sm font-medium text-gray-700 mb-2">Grind Type</label>
+                <select id="beanGrind" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all">
+                  <option value="">Select Grind</option>
+                  <option value="whole">Whole Bean</option>
+                  <option value="coarse">Coarse (French Press)</option>
+                  <option value="medium">Medium (Drip Coffee)</option>
+                  <option value="fine">Fine (Espresso)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Special Instructions -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span class="w-6 h-6 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-sm mr-3">5</span>
+              Special Instructions
+            </h3>
+            <div>
+              <label for="beanInstructions" class="block text-sm font-medium text-gray-700 mb-2">Additional Requirements</label>
+              <textarea
+                id="beanInstructions"
+                placeholder="Any specific requirements, blend preferences, flavor notes you're looking for, or special requests"
+                rows="4"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent form-field transition-all resize-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button
+              type="submit"
+              id="beanCustomizationSubmit"
+              class="w-full px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-amber-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg"
+            >
+              🌱 Create Custom Blend
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- Newsletter Section -->
   <section id="newsletterSection" class="bg-white py-12 text-center">
     <h2 class="text-3xl font-semibold mb-4">Join Our Coffee Club</h2>
@@ -702,6 +1229,58 @@
       <h2 class="text-2xl font-semibold mb-4">Subscribed!</h2>
       <p class="text-gray-700 mb-4">You're now part of the BossingKape Coffee Club. Expect exciting updates soon!</p>
       <button id="newsletterModalClose" class="modal-close">Close</button>
+    </div>
+  </div>
+
+  <!-- Catering Confirmation Modal -->
+  <div id="cateringModal" class="modal" aria-label="Catering Request Confirmation Modal">
+    <div class="modal-content max-w-lg text-center">
+      <div class="mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">Catering Request Received!</h2>
+        <p class="text-gray-600 mb-4">Thank you for choosing BossingKape for your corporate event. Our team will review your requirements and contact you within 24 hours with a detailed quote.</p>
+      </div>
+      
+      <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left">
+        <h3 class="font-semibold mb-2 text-gray-900">What's Next:</h3>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li>• Our catering team will review your request</li>
+          <li>• We'll prepare a customized quote for your event</li>
+          <li>• You'll receive a detailed proposal via email</li>
+          <li>• We'll schedule a consultation if needed</li>
+        </ul>
+      </div>
+      
+      <button id="cateringModalClose" class="modal-close w-full">Continue</button>
+    </div>
+  </div>
+
+  <!-- Bean Customization Confirmation Modal -->
+  <div id="beanCustomizationModal" class="modal" aria-label="Bean Customization Confirmation Modal">
+    <div class="modal-content max-w-lg text-center">
+      <div class="mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+          <span class="text-2xl">🌱</span>
+        </div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">Custom Blend Request Received!</h2>
+        <p class="text-gray-600 mb-4">Your custom coffee blend request has been submitted successfully. Our master roasters will craft your perfect blend based on your preferences.</p>
+      </div>
+      
+      <div class="bg-amber-50 p-4 rounded-lg mb-6 text-left">
+        <h3 class="font-semibold mb-2 text-gray-900">Processing Timeline:</h3>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li>• <strong>24-48 hours:</strong> Blend formulation & sourcing</li>
+          <li>• <strong>3-5 days:</strong> Custom roasting & quality testing</li>
+          <li>• <strong>1 week:</strong> Packaging & delivery preparation</li>
+          <li>• <strong>Final step:</strong> Delivery to your doorstep</li>
+        </ul>
+      </div>
+      
+      <button id="beanCustomizationModalClose" class="modal-close w-full">Continue</button>
     </div>
   </div>
 
@@ -1736,11 +2315,179 @@
       setupPagination();
     });
 
+    // Catering Form Validation
+    function setupCateringForm() {
+      const cateringCompany = document.getElementById('cateringCompany');
+      const cateringContact = document.getElementById('cateringContact');
+      const cateringEmail = document.getElementById('cateringEmail');
+      const cateringPhone = document.getElementById('cateringPhone');
+      const cateringDate = document.getElementById('cateringDate');
+      const cateringTime = document.getElementById('cateringTime');
+      const cateringAttendees = document.getElementById('cateringAttendees');
+      const cateringLocation = document.getElementById('cateringLocation');
+      const cateringSubmit = document.getElementById('cateringSubmit');
+      const cateringModal = document.getElementById('cateringModal');
+      const cateringModalClose = document.getElementById('cateringModalClose');
+
+      // Real-time validation
+      cateringCompany.addEventListener('input', () => validateField(cateringCompany, 'cateringCompanyError', validateRequired, 'Company name is required.'));
+      cateringCompany.addEventListener('blur', () => validateField(cateringCompany, 'cateringCompanyError', validateRequired, 'Company name is required.'));
+      
+      cateringContact.addEventListener('input', () => validateField(cateringContact, 'cateringContactError', validateRequired, 'Contact person is required.'));
+      cateringContact.addEventListener('blur', () => validateField(cateringContact, 'cateringContactError', validateRequired, 'Contact person is required.'));
+      
+      cateringEmail.addEventListener('input', () => validateField(cateringEmail, 'cateringEmailError', validateEmail, 'Valid email is required.'));
+      cateringEmail.addEventListener('blur', () => validateField(cateringEmail, 'cateringEmailError', validateEmail, 'Valid email is required.'));
+      
+      cateringPhone.addEventListener('input', () => validateField(cateringPhone, 'cateringPhoneError', validatePhone, 'Valid phone number is required.'));
+      cateringPhone.addEventListener('blur', () => validateField(cateringPhone, 'cateringPhoneError', validatePhone, 'Valid phone number is required.'));
+      
+      cateringDate.addEventListener('input', () => validateField(cateringDate, 'cateringDateError', val => new Date(val) > new Date(), 'Event date must be in the future.'));
+      cateringDate.addEventListener('blur', () => validateField(cateringDate, 'cateringDateError', val => new Date(val) > new Date(), 'Event date must be in the future.'));
+      
+      cateringTime.addEventListener('input', () => validateField(cateringTime, 'cateringTimeError', validateRequired, 'Event time is required.'));
+      cateringTime.addEventListener('blur', () => validateField(cateringTime, 'cateringTimeError', validateRequired, 'Event time is required.'));
+      
+      cateringAttendees.addEventListener('input', () => validateField(cateringAttendees, 'cateringAttendeesError', val => validateNumberRange(val, 10, 500), 'Number of attendees (10-500) is required.'));
+      cateringAttendees.addEventListener('blur', () => validateField(cateringAttendees, 'cateringAttendeesError', val => validateNumberRange(val, 10, 500), 'Number of attendees (10-500) is required.'));
+      
+      cateringLocation.addEventListener('input', () => validateField(cateringLocation, 'cateringLocationError', validateRequired, 'Event location is required.'));
+      cateringLocation.addEventListener('blur', () => validateField(cateringLocation, 'cateringLocationError', validateRequired, 'Event location is required.'));
+
+      // Form submission
+      document.getElementById('cateringForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const isCompanyValid = validateField(cateringCompany, 'cateringCompanyError', validateRequired, 'Company name is required.');
+        const isContactValid = validateField(cateringContact, 'cateringContactError', validateRequired, 'Contact person is required.');
+        const isEmailValid = validateField(cateringEmail, 'cateringEmailError', validateEmail, 'Valid email is required.');
+        const isPhoneValid = validateField(cateringPhone, 'cateringPhoneError', validatePhone, 'Valid phone number is required.');
+        const isDateValid = validateField(cateringDate, 'cateringDateError', val => new Date(val) > new Date(), 'Event date must be in the future.');
+        const isTimeValid = validateField(cateringTime, 'cateringTimeError', validateRequired, 'Event time is required.');
+        const isAttendeesValid = validateField(cateringAttendees, 'cateringAttendeesError', val => validateNumberRange(val, 10, 500), 'Number of attendees (10-500) is required.');
+        const isLocationValid = validateField(cateringLocation, 'cateringLocationError', validateRequired, 'Event location is required.');
+
+        if (isCompanyValid && isContactValid && isEmailValid && isPhoneValid && isDateValid && isTimeValid && isAttendeesValid && isLocationValid) {
+          // Get selected options
+          const coffeeOptions = Array.from(document.querySelectorAll('input[name="coffeeOptions"]:checked')).map(el => el.value);
+          const foodOptions = Array.from(document.querySelectorAll('input[name="foodOptions"]:checked')).map(el => el.value);
+          
+          const cateringData = {
+            company: cateringCompany.value,
+            contact: cateringContact.value,
+            email: cateringEmail.value,
+            phone: cateringPhone.value,
+            date: cateringDate.value,
+            time: cateringTime.value,
+            attendees: cateringAttendees.value,
+            service: document.getElementById('cateringService').value,
+            coffeeOptions: coffeeOptions,
+            foodOptions: foodOptions,
+            location: cateringLocation.value,
+            requirements: document.getElementById('cateringRequirements').value,
+            timestamp: new Date().toISOString()
+          };
+          
+          console.log('Catering Request:', cateringData);
+          showModal('cateringModal');
+          
+          // Clear form
+          document.getElementById('cateringForm').reset();
+          [cateringCompany, cateringContact, cateringEmail, cateringPhone, cateringDate, cateringTime, cateringAttendees, cateringLocation].forEach(input => {
+            input.classList.remove('input-error', 'input-valid');
+            document.getElementById(`${input.id}Error`).classList.remove('show');
+          });
+        }
+      });
+
+      cateringModalClose.addEventListener('click', () => hideModal('cateringModal'));
+      cateringModal.addEventListener('click', (e) => {
+        if (e.target === cateringModal) hideModal('cateringModal');
+      });
+    }
+
+    // Bean Customization Form Validation
+    function setupBeanCustomizationForm() {
+      const beanName = document.getElementById('beanName');
+      const beanEmail = document.getElementById('beanEmail');
+      const beanSubmit = document.getElementById('beanCustomizationSubmit');
+      const beanModal = document.getElementById('beanCustomizationModal');
+      const beanModalClose = document.getElementById('beanCustomizationModalClose');
+
+      // Real-time validation
+      beanName.addEventListener('input', () => validateField(beanName, 'beanNameError', validateRequired, 'Full name is required.'));
+      beanName.addEventListener('blur', () => validateField(beanName, 'beanNameError', validateRequired, 'Full name is required.'));
+      
+      beanEmail.addEventListener('input', () => validateField(beanEmail, 'beanEmailError', validateEmail, 'Valid email is required.'));
+      beanEmail.addEventListener('blur', () => validateField(beanEmail, 'beanEmailError', validateEmail, 'Valid email is required.'));
+
+      // Origins selection limit (max 3)
+      const originCheckboxes = document.querySelectorAll('input[name="origins"]');
+      originCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          const checkedOrigins = document.querySelectorAll('input[name="origins"]:checked');
+          if (checkedOrigins.length > 3) {
+            checkbox.checked = false;
+            alert('You can select up to 3 coffee origins only.');
+          }
+        });
+      });
+
+      // Form submission
+      document.getElementById('beanCustomizationForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const isNameValid = validateField(beanName, 'beanNameError', validateRequired, 'Full name is required.');
+        const isEmailValid = validateField(beanEmail, 'beanEmailError', validateEmail, 'Valid email is required.');
+        
+        // Check if at least one origin is selected
+        const selectedOrigins = Array.from(document.querySelectorAll('input[name="origins"]:checked')).map(el => el.value);
+        const hasOrigins = selectedOrigins.length > 0;
+        
+        if (!hasOrigins) {
+          alert('Please select at least one coffee origin.');
+          return;
+        }
+
+        if (isNameValid && isEmailValid && hasOrigins) {
+          const beanData = {
+            name: beanName.value,
+            email: beanEmail.value,
+            origins: selectedOrigins,
+            roastLevel: document.getElementById('beanRoastLevel').value,
+            processing: document.getElementById('beanProcessing').value,
+            quantity: document.getElementById('beanQuantity').value,
+            frequency: document.getElementById('beanFrequency').value,
+            grind: document.getElementById('beanGrind').value,
+            instructions: document.getElementById('beanInstructions').value,
+            timestamp: new Date().toISOString()
+          };
+          
+          console.log('Bean Customization Request:', beanData);
+          showModal('beanCustomizationModal');
+          
+          // Clear form
+          document.getElementById('beanCustomizationForm').reset();
+          [beanName, beanEmail].forEach(input => {
+            input.classList.remove('input-error', 'input-valid');
+            document.getElementById(`${input.id}Error`).classList.remove('show');
+          });
+        }
+      });
+
+      beanModalClose.addEventListener('click', () => hideModal('beanCustomizationModal'));
+      beanModal.addEventListener('click', (e) => {
+        if (e.target === beanModal) hideModal('beanCustomizationModal');
+      });
+    }
+
     // Initialize Forms
     setupContactForm();
     setupNewsletterForm();
     setupFeedbackForm();
     setupReservationForm();
+    setupCateringForm();
+    setupBeanCustomizationForm();
     displayProducts(currentPage);
     setupPagination();
   </script>
